@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -18,7 +18,7 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/starter" /> },
+      { path: "/", element: <Starter/> },
       { path: "/starter", exact: true, element: <Starter /> },
       { path: "/listeMarque", exact: true, element: <ListeMarque /> },
       { path: "/insererMarque", exact: true, element: <InsererMarque /> },
