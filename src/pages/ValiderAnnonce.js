@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   Card,
   CardTitle,
@@ -13,7 +12,6 @@ import {
 import bg1 from "../assets/images/bg/bg1.jpg";
 import bg2 from "../assets/images/bg/bg2.jpg";
 import bg3 from "../assets/images/bg/bg3.jpg";
-import { useState } from 'react';
 
 const ValiderAnnonce = () => {
 
