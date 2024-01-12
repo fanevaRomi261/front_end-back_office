@@ -19,6 +19,7 @@ import Index from "views/Index.js";
 import ListeMarque from "pages/marque/ListeMarque";
 import ModifierMarque from "pages/marque/ModifierMarque";
 import ValiderAnnonce from "pages/annonce/ValiderAnnonce";
+import DetailAnnonce from "pages/annonce/DetailAnnonce";
 
 var routes = [
   {
@@ -47,10 +48,18 @@ var routes = [
   {
     path: "/validerAnnonce",
     name: "ValiderAnnonce",
-    icon: "ni ni-planet text-blue",
+    icon: "ni ni-check-bold text-blue",
     component: <ValiderAnnonce/>,
     layout: "/admin",
     showInSidebar:true,
+  },
+  {
+    path: "/detailAnnonce/:id",
+    name: "DetailAnnonce",
+    icon: "ni ni-check-bold text-blue",
+    component: <DetailAnnonce/>,
+    layout: "/admin",
+    showInSidebar:false,
   },
 
 

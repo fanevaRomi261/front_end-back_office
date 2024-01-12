@@ -14,8 +14,7 @@ import
     Row,
 } from 'reactstrap';
 
-class ModifierMarque extends React.Component{
-    render(){
+const ModifierMarque =()=>{
         return(
             <>
                 <Header/>
@@ -56,7 +55,6 @@ class ModifierMarque extends React.Component{
                 </Container>
             </>
         );
-    }
     
 };
 
