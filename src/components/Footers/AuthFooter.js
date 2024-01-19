@@ -29,47 +29,41 @@ const Login = () => {
             <Col xl="6">
               <div className="copyright text-center text-xl-left text-muted">
                 © {new Date().getFullYear()}{" "}
-                <a
-                  className="font-weight-bold ml-1"
-                  href="https://www.creative-tim.com?ref=adr-auth-footer"
-                  target="_blank"
-                >
-                  Creative Tim
-                </a>
+                  Location Voiture
               </div>
             </Col>
             <Col xl="6">
               <Nav className="nav-footer justify-content-center justify-content-xl-end">
-                <NavItem>
-                  <NavLink
-                    href="https://www.creative-tim.com?ref=adr-auth-footer"
+                <NavItem>                  
+                <NavLink
+                    href="#"
                     target="_blank"
                   >
-                    Creative Tim
+                   ETU001808
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                <NavLink
+                    href="#"
+                    target="_blank"
+                  >
+                   ETU001832
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                <NavLink
+                    href="#"
+                    target="_blank"
+                  >
+                   ETU001833
                   </NavLink>
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    href="https://www.creative-tim.com/presentation?ref=adr-auth-footer"
+                    href="#"
                     target="_blank"
                   >
-                    About Us
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    href="http://blog.creative-tim.com?ref=adr-auth-footer"
-                    target="_blank"
-                  >
-                    Blog
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md?ref=adr-auth-footer"
-                    target="_blank"
-                  >
-                    MIT License
+                   ETU001866
                   </NavLink>
                 </NavItem>
               </Nav>

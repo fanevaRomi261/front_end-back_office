@@ -16,7 +16,7 @@ import
 import api from "services/api";
 
 
-const ModifierMarque =()=>{
+const ModifierPays =()=>{
     const {id} = useParams();
 
     const initialValue = {
@@ -24,16 +24,13 @@ const ModifierMarque =()=>{
         etat : 1
     };
 
-    const [marqueModif,setMarque] = useState(initialValue);
-    const [pays,setPays] = useState(null);
+    const [pays,setPays] = useState(initialValue);
     const [erreur, setErreur] = useState(null);
 
     useEffect(() =>{
         const getData = async () => {
             try {
-                const responseMarque = await api.get(`/admin/marque/${id}`);
-                const responsePays = await api.get(`/admin/pays`);
-                setMarque(responseMarque.data.data);
+                const responsePays = await api.get(`/admin/pays/${id}`);
                 setPays(responsePays.data.data);
             } catch (error) {
                 console.error('Erreur', error);
@@ -44,10 +41,10 @@ const ModifierMarque =()=>{
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(marqueModif);
+        console.log(pays);
         try {
-            await api.put(`admin/marque/${id}`,marqueModif);
-            window.location.replace('/admin/listeMarque');
+            await api.put(`admin/pays/${id}`,pays);
+            window.location.replace('/admin/listePays');
         } catch (error) {
             setErreur(error.response.data.error);
         }
@@ -59,9 +56,9 @@ const ModifierMarque =()=>{
             <>
                 <Header/>
                 <Container className="mt--9" fluid>
-                    <Link to="/admin/listeMarque">
+                    <Link to="/admin/listePays">
                         <Button className="mt-2" color="danger" type="button">
-                        Retour
+                            Retour
                         </Button>
                     </Link>
                     <Row className="mt-3">
@@ -69,7 +66,7 @@ const ModifierMarque =()=>{
                             <Form role="form" onSubmit={handleSubmit}>
                                 <Card className="bg-default shadow">
                                     <CardHeader className="bg-transparent border-0">
-                                        <h3 className="text-white mb-0">Marque</h3>
+                                        <h3 className="text-white mb-0">Pays</h3>
                                     </CardHeader>
                                     
                                     <CardBody className="bg-transparent border-0">
@@ -80,27 +77,7 @@ const ModifierMarque =()=>{
                                             }
                                             <FormGroup className="mb-3">
                                                 <label className="form-control-label text-white" htmlFor="libelle">Nom</label>
-                                                <Input placeholder="Ecrire ici" type="text" id="libelle" name="libelle" value={marqueModif?.libelle || ""} onChange={(e) => setMarque({...marqueModif,libelle:e.target.value})}/>
-                                            </FormGroup>
-                                            <FormGroup className="mb-3">
-                                                <label className="form-control-label text-white" htmlFor="idpays">Pays</label>
-                                                <Input type="select" 
-                                                    id="idpays" 
-                                                    onChange={(e) => setMarque({ 
-                                                        ...marqueModif, 
-                                                        pays: { 
-                                                          ...marqueModif.pays, 
-                                                          id: e.target.value 
-                                                        }
-                                                      })}
-                                                    value={marqueModif?.pays?.id}
-                                                    name="idpays">
-                                                    <option value="">Sélectionner</option>
-                                                    {pays?.map((ctr, index) => (
-                                                        <option key={index} value={ctr.id}>{ctr.libelle}</option>
-                                                    ))}
-                                                    
-                                                </Input>
+                                                <Input placeholder="Ecrire ici" type="text" id="libelle" name="libelle" value={pays?.libelle || ""} onChange={(e) => setPays({...pays,libelle:e.target.value})}/>
                                             </FormGroup>
                                         
                                         <Button type="submit" color="primary">Valider</Button>
@@ -116,4 +93,4 @@ const ModifierMarque =()=>{
     
 };
 
-export default ModifierMarque;
+export default ModifierPays;

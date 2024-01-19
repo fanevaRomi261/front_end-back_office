@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/creativetimofficial/argon-dashboard-react/issues"
   },
-  "homepage": "https://charming-kringle-9a951b.netlify.app/",
+  "homepage": "https://milavam-admin.netlify.app/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -44,6 +44,7 @@
   ],
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.5.1",
+    "axios": "^1.6.5",
     "bootstrap": "4.6.2",
     "chart.js": "2.9.4",
     "classnames": "2.3.2",
@@ -54,12 +55,14 @@
     "react-copy-to-clipboard": "5.1.0",
     "react-datetime": "3.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "6.21.1",
+    "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.8",
     "reactstrap": "8.10.0",
     "sass": "1.69.5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9"
   },
