@@ -1,66 +1,106 @@
 import Header from "components/Headers/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
+import { Container, Row, Col, Card, CardBody,CardImg, Button } from "reactstrap";
+import api from "services/api";
+import StylishLoader from "../tools/StylishLoader";
+import { Carousel } from 'react-responsive-carousel';
 
 const DetailAnnonce = () => {
   const { id } = useParams();
 
-  const details = {
-    title: `Annonce ${id}`,
-    description: `Description détaillée de l'annonce ${id}.`,
-    imageUrls: [
-      `https://picsum.photos/300/200?random=${id}&1`,
-      `https://picsum.photos/300/200?random=${id}&2`,
-      `https://picsum.photos/300/200?random=${id}&3`,
-    ], // Replace with the actual image URLs
-  };
+  const [annonce,setAnnonce] = useState(null);
+  const [loading,setLoading] = useState(true);
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const getData = async () => {
+    try {
+      const response = await api.get(`/admin/annonce/${id}`);
+      setAnnonce(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Erreur', error);
+      setLoading(false);
+    }
+    
+  }
 
-  const goToNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % details.imageUrls.length);
-  };
+  const handleValider = async () => {
+    try {
+      await api.put(`/admin/annonce/${id}/validation`);
+      window.location.replace('/admin/listeMarque');
+    } catch (error) {
+      console.error('erreur',error);
+    }
+  }
 
-  const goToPreviousImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + details.imageUrls.length) % details.imageUrls.length
-    );
-  };
+  const handleRefuser = async () => {
+    try {
+      await api.put(`/admin/annonce/${id}/refus`);
+      window.location.replace('/admin/listeMarque');
+    } catch (error) {
+      console.error('erreur',error);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  },[]);
+  
 
   return (
     <>
       <Header />
-      <Container className="mt--7" fluid>
+      <Container className="mt--9" fluid>
+      <Link to="/admin/validerAnnonce">
+        <Button type="button" color="default">
+          <i className="ni ni-bold-left"></i> Retour
+        </Button>
+      </Link>
         <Row>
-          <Col md="8" className="mx-auto mt-3">
-            <Card className="bg-secondary shadow rounded" style={{ border: '1px solid #ccc' }}>
-              <CardBody className="bg-transparent border-0 text-center">
-                <h4 className="mb-4">{details.title}</h4>
-                <img
-                  src={details.imageUrls[currentImageIndex]}
-                  alt={`Annonce ${id} - ${currentImageIndex + 1}`}
-                  className="img-fluid rounded"
-                  style={{ maxHeight: '400px', marginBottom: '20px' }}
-                />
-                <div className="d-flex justify-content-between mb-4">
-                  <Button type="button" color="default" onClick={goToPreviousImage}>
-                    <i className="ni ni-bold-left"></i> Previous
-                  </Button>
-                  <Button type="button" color="default" onClick={goToNextImage}>
-                    Next <i className="ni ni-bold-right"></i>
-                  </Button>
-                </div>
-                <p className="text-muted mb-4">{details.description}</p>
-                <Link to="/admin/validerAnnonce">
-                  <Button type="button" color="default">
-                    <i className="ni ni-bold-left"></i> Retour
-                  </Button>
-                </Link>
-              </CardBody>
-            </Card>
-          </Col>
+          {loading && (
+              <Col xl="12" className="text-center mt-8">
+                  <StylishLoader loaderColor="#2b8a8a" />
+              </Col>
+          )}
+          {!loading && (
+            <React.Fragment key={1}>
+              <Col md="6" className="mx-auto">
+                <Card className="bg-secondary shadow rounded" style={{ border: '1px solid #ccc' }}>
+                  <CardBody className="bg-transparent border-0">
+                    <h4 className="mb-4">Marque : {annonce.marque.libelle}</h4>
+                    <Carousel showArrows={true} showThumbs={false}>
+                      {annonce.photo.map((photo, photoIndex) => (
+                          <div key={photoIndex}>
+                          <CardImg top width="100%" height="300px" 
+                              src={`data:${photo.type};base64,${photo.data}`}
+                              alt={`Image ${photoIndex + 1}`}
+                          />
+                          </div>
+                      ))}
+                    </Carousel>
+                    
+                    <p className="mt-2">Categorie : {annonce.categorie.libelle}</p>
+                    <p>Type : {annonce.type.libelle}</p>
+                    <p>Date : {annonce.date}</p>
+                    <p>Publie par : {annonce.utilisateur.nom} {annonce.utilisateur.prenom}</p>
+                    <p>Description : {annonce.description}</p>
+
+                    <div className="d-flex">
+                        <Button type="button" color="success" onClick={() => handleValider()} className="mr-2">
+                            <i className="ni ni-check-bold"></i> Valider
+                        </Button>
+                        <Button type="button" color="danger" onClick={() => handleRefuser()}>
+                            <i className="ni ni-fat-remove"></i> Refuser
+                        </Button>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              </React.Fragment>
+            )}
+
+
         </Row>
       </Container>
     </>

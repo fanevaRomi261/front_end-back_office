@@ -1,5 +1,5 @@
 import Header from "components/Headers/Header";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { 
     Container,
@@ -10,58 +10,113 @@ import {
     CardImg,
     Button,
 } from "reactstrap";
+import api from "services/api";
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import StylishLoader from "../tools/StylishLoader";
 
 const ValiderAnnonce =()=> {
-        const annonces = [
-            { 
-                imageUrl: "https://picsum.photos/200/300", 
-                title: "Annonce 1", 
-                description: "Description de l'annonce 1. Ceci est une description détaillée de l'annonce 1." 
-            },
-            { 
-                imageUrl: "https://picsum.photos/201/301", 
-                title: "Annonce 2", 
-                description: "Description de l'annonce 2. Ceci est une description détaillée de l'annonce 2." 
-            },
-            { 
-                imageUrl: "https://picsum.photos/202/302", 
-                title: "Annonce 3", 
-                description: "Description de l'annonce 3. Ceci est une description détaillée de l'annonce 3." 
-            },
-            { 
-                imageUrl: "https://picsum.photos/203/303", 
-                title: "Annonce 4", 
-                description: "Description de l'annonce 4. Ceci est une description détaillée de l'annonce 4." 
-            },
-            { 
-                imageUrl: "https://picsum.photos/204/304", 
-                title: "Annonce 5", 
-                description: "Description de l'annonce 5. Ceci est une description détaillée de l'annonce 5." 
-            },
-        ];
 
-        return(
-            <>
-                <Header />
-                <Container className="mt--7" fluid>
-                    <Row>
-                        {annonces.map((annonce, index) => (
+    const [annonces,setAnnonces] = useState([]);
+    const [loading,setLoading] = useState(true);
+    const [loadingValider, setLoadingValider] = useState(false);
+    const [loadingRefuser, setLoadingRefuser] = useState(false);
+
+    const getData = async () => {
+        try {
+            const responseMarque = await api.get("/admin/annonce/non-valider");
+            setAnnonces(responseMarque.data.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Erreur', error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    },[]);
+
+    const handleValider = async (id) => {
+        try {
+            setLoadingValider(true);
+            await api.put(`/admin/annonce/${id}/validation`);
+            getData();
+        } catch (error) {
+            console.error('erreur', error);
+        } finally {
+            setLoadingValider(false);
+        }
+    }
+
+    const handleRefuser = async (id) => {
+        try {
+            setLoadingRefuser(true);
+            await api.put(`/admin/annonce/${id}/refus`);
+            getData();
+        } catch (error) {
+            console.error('erreur', error);
+        } finally {
+            setLoadingRefuser(false);
+        }
+    }
+
+    
+    return(
+        <>
+            <Header />
+            <Container className="mt--7" fluid>
+                <Row>
+                    {loading && (
+                        <Col xl="12" className="text-center mt-8">
+                            <StylishLoader loaderColor="#2b8a8a" />
+                        </Col>
+                    )}
+                    {!loading && (
+                    <React.Fragment key={1}>
+                        {annonces?.map((annonce, index) => (
                             <Col key={index} md="4" className="mt-3">
                                 <Card className="bg-secondary shadow rounded" style={{ border: '1px solid #ccc' }}>
-                                    <CardImg top width="100%" height="180px" src={annonce.imageUrl} alt={`Image ${index + 1}`} />
+                                    
+                                    <Carousel showArrows={true} showThumbs={false}>
+                                    {annonce.photo.map((photo, photoIndex) => (
+                                        <div key={photoIndex}>
+                                        <CardImg top width="100%" height="200px" 
+                                            src={`data:${photo.type};base64,${photo.data}`}
+                                            alt={`Image ${photoIndex + 1}`}
+                                        />
+                                        </div>
+                                    ))}
+                                    </Carousel>
+
                                     <CardBody className="bg-transparent border-0">
-                                        <h4>{annonce.title}</h4>
-                                        <p className="text-muted">{annonce.description}</p>
-                                        <Link to={`/admin/detailAnnonce/${index + 1}`} className="btn btn-default"><i className="ni ni-bullet-list-67"></i> Détails</Link>
-                                        <Button type="button" color="success"><i className="ni ni-bold-right"></i>Valider</Button>
+                                        <h4>Marque : {annonce.marque.libelle}</h4>
+                                        <p>Publie par : {annonce.utilisateur.nom} {annonce.utilisateur.prenom}</p>
+                                        <p>Date : {annonce.date}</p>
+                                        <div className="d-flex flex-column justify-content-between align-items-center">
+                                            <Link to={`/admin/detailAnnonce/${annonce.id}`} className="btn btn-default mb-2"><i className="ni ni-bullet-list-67"></i> Détails</Link>
+                                            <div className="d-flex">
+                                                <Button type="button" color="success" onClick={() => handleValider(annonce.id)} className="mr-2" disabled={loadingValider}>
+                                                    {loadingValider ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-check-bold"></i> Valider</>}
+                                                </Button>
+                                                <Button type="button" color="danger" onClick={() => handleRefuser(annonce.id)} disabled={loadingRefuser}>
+                                                    {loadingRefuser ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-fat-remove"></i> Refuser</>}
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </CardBody>
                                 </Card>
                             </Col>
                         ))}
-                    </Row>
-                </Container>
-            </>
-        );
+                    </React.Fragment>
+                    )}
+                </Row>
+            </Container>
+        </>
+    );
+
+
+
 }
 
 export default ValiderAnnonce;
