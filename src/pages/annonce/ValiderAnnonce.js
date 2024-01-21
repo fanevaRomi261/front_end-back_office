@@ -19,8 +19,8 @@ const ValiderAnnonce =()=> {
 
     const [annonces,setAnnonces] = useState([]);
     const [loading,setLoading] = useState(true);
-    const [loadingValider, setLoadingValider] = useState(false);
-    const [loadingRefuser, setLoadingRefuser] = useState(false);
+    const [loadingValider, setLoadingValider] = useState({});
+    const [loadingRefuser, setLoadingRefuser] = useState({});
 
     const getData = async () => {
         try {
@@ -39,25 +39,25 @@ const ValiderAnnonce =()=> {
 
     const handleValider = async (id) => {
         try {
-            setLoadingValider(true);
+            setLoadingValider((prev) => ({ ...prev, [id]: true }));
             await api.put(`/admin/annonce/${id}/validation`);
             getData();
         } catch (error) {
             console.error('erreur', error);
         } finally {
-            setLoadingValider(false);
+            setLoadingValider((prev) => ({ ...prev, [id]: false }));
         }
     }
 
     const handleRefuser = async (id) => {
         try {
-            setLoadingRefuser(true);
+            setLoadingRefuser((prev) => ({ ...prev, [id]: true }));
             await api.put(`/admin/annonce/${id}/refus`);
             getData();
         } catch (error) {
             console.error('erreur', error);
         } finally {
-            setLoadingRefuser(false);
+            setLoadingRefuser((prev) => ({ ...prev, [id]: false }));
         }
     }
 
@@ -96,11 +96,11 @@ const ValiderAnnonce =()=> {
                                         <div className="d-flex flex-column justify-content-between align-items-center">
                                             <Link to={`/admin/detailAnnonce/${annonce.id}`} className="btn btn-default mb-2"><i className="ni ni-bullet-list-67"></i> Détails</Link>
                                             <div className="d-flex">
-                                                <Button type="button" color="success" onClick={() => handleValider(annonce.id)} className="mr-2" disabled={loadingValider}>
-                                                    {loadingValider ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-check-bold"></i> Valider</>}
+                                                <Button type="button" color="success" onClick={() => handleValider(annonce.id)} className="mr-2" disabled={loadingValider[annonce.id]}>
+                                                    {loadingValider[annonce.id] ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-check-bold"></i> Valider</>}
                                                 </Button>
-                                                <Button type="button" color="danger" onClick={() => handleRefuser(annonce.id)} disabled={loadingRefuser}>
-                                                    {loadingRefuser ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-fat-remove"></i> Refuser</>}
+                                                <Button type="button" color="danger" onClick={() => handleRefuser(annonce.id)} disabled={loadingValider[annonce.id]}>
+                                                    {loadingRefuser[annonce.id] ? <StylishLoader loaderColor="#fff" /> : <><i className="ni ni-fat-remove"></i> Refuser</>}
                                                 </Button>
                                             </div>
                                         </div>

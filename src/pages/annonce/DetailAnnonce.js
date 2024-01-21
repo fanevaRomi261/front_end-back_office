@@ -45,7 +45,7 @@ const DetailAnnonce = () => {
 
   useEffect(() => {
     getData();
-  });
+  },[id]);
   
 
   return (
