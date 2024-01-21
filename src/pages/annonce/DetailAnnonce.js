@@ -13,17 +13,7 @@ const DetailAnnonce = () => {
   const [annonce,setAnnonce] = useState(null);
   const [loading,setLoading] = useState(true);
 
-  const getData = async () => {
-    try {
-      const response = await api.get(`/admin/annonce/${id}`);
-      setAnnonce(response.data.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Erreur', error);
-      setLoading(false);
-    }
-    
-  }
+
 
   const handleValider = async () => {
     try {
@@ -44,8 +34,20 @@ const DetailAnnonce = () => {
   }
 
   useEffect(() => {
-    getData();
-  },[id]);
+    const getData = async () => {
+      try {
+        const response = await api.get(`/admin/annonce/${id}`);
+        setAnnonce(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erreur', error);
+        setLoading(false);
+      }
+    };
+  
+    getData(); // Call the function immediately
+
+  }, [id]);
   
 
   return (
