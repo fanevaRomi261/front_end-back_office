@@ -14,7 +14,6 @@ import {
   InputGroup,
   Col,
 } from "reactstrap";
-import Loader from 'pages/tools/Loader';
 import StylishLoader from 'pages/tools/StylishLoader';
 
 const Login = () => {
