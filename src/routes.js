@@ -31,6 +31,7 @@ import ListeCategorie from "pages/categorie/ListeCategorie";
 import ModifierCategorie from "pages/categorie/ModifierCategorie";
 import ListeType from "pages/type/ListeType";
 import ModifierType from "pages/type/ModifierType";
+import InsererAnnonce from "pages/mobile/InsererAnnonce";
 
 var routes = [
   {
@@ -165,7 +166,13 @@ var routes = [
     layout: "/admin",
     showInSidebar:false,
   },
-
+  {
+    path: "/insererAnnonce",
+    name: "Inserer annonce",
+    component: <InsererAnnonce/>,
+    layout: "/admin",
+    showInSidebar:false,
+  },
 
 ];
 export default routes;

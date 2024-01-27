@@ -15,6 +15,7 @@ import {
   Col,
 } from "reactstrap";
 import Loader from 'pages/tools/Loader';
+import StylishLoader from 'pages/tools/StylishLoader';
 
 const Login = () => {
   const [email, setEmail] = useState(null);
@@ -87,7 +88,7 @@ const Login = () => {
               {loading ? (
                 <div className="text-center">
                   <Button className="my-4">
-                    <Loader  />
+                    <StylishLoader/>
                   </Button>
                 </div>
               ) : (

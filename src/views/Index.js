@@ -1,335 +1,228 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import { useState } from "react";
-// node.js library that concatenates classes (strings)
-import classnames from "classnames";
-// javascipt plugin for creating charts
 import Chart from "chart.js";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
-// reactstrap components
+import { Line,Bar } from "react-chartjs-2";
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
-  NavItem,
-  NavLink,
-  Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col,
+  CardTitle
 } from "reactstrap";
-
-// core components
-import {
-  chartOptions,
-  parseOptions,
-  chartExample1,
-  chartExample2,
-} from "variables/charts.js";
-
+import { chartOptions, parseOptions } from "variables/charts.js";
+import { venteChartOptions } from "variables/chartBarOptions";
+import api from "services/api";
+import React, { useState, useEffect } from "react";
 import Header from "components/Headers/Header.js";
+import StylishLoader from "../pages/tools/StylishLoader";
 
-const Index = (props) => {
-  const [activeNav, setActiveNav] = useState(1);
-  const [chartExample1Data, setChartExample1Data] = useState("data1");
+const Index = (prop) => {
+  const [statCommission, setStatCommission] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedYearCommission, setSelectedYearCommission] = useState(2024);
+  const [statVente, setStatVente] = useState(null);
+  const [selectedYearVente, setSelectedYearVente] = useState(2024);
+  const [statUser, setStatUser] = useState(null);
+
+  const monthNames = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ];
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
   }
 
-  const toggleNavs = (e, index) => {
-    e.preventDefault();
-    setActiveNav(index);
-    setChartExample1Data("data" + index);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const responseCommission = await api.get('/statistique/commission');
+        setStatCommission(responseCommission.data.data);
+
+        const responseVente = await api.get('/statistique/vente');
+        setStatVente(responseVente.data.data);
+
+        const responseNombre = await api.get('/statistique/nombre_utilisateur');
+        setStatUser(responseNombre.data.data);
+
+        console.log(responseVente.data.data);
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, []);
+
+  const commissionChart = () => {
+    if (!statCommission) return null;
+
+    const filteredData = statCommission.filter(entry => entry.annee === selectedYearCommission);
+
+    const data = {
+      labels: monthNames,
+      datasets: [
+        {
+          label: `Commission for ${selectedYearCommission}`,
+          fill: true,
+          lineTension: 0.3,
+          backgroundColor: "rgba(255,255,255,0.2)",
+          borderColor: "rgba(255,255,255,0.7)",
+          borderCapStyle: "butt",
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: "miter",
+          pointBorderColor: "rgba(255,255,255,0.7)",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(255,255,255,1)",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data: Array.from({ length: 12 }, (_, i) =>
+            filteredData.find(entry => entry.mois === i + 1)?.total || 0
+          ),
+        },
+      ],
+    };
+
+    return data;
   };
+
+  const venteChart = () => {
+    if (!statVente) return null;
+
+    const filteredData = statVente.filter(entry => entry.annee === selectedYearVente );
+
+    const data = {
+      labels: monthNames,
+      datasets: [
+        {
+          label: `Vente for ${selectedYearVente }`,
+          backgroundColor: "rgba(255,99,132,1)", // Adjust the color as needed
+          borderColor: "rgba(255,99,132,1)", // Adjust the color as needed
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(255,99,132,0.4)", // Adjust the color as needed
+          hoverBorderColor: "rgba(255,99,132,1)",
+          data: Array.from({ length: 12 }, (_, i) =>
+            filteredData.find(entry => entry.mois === i + 1)?.nombre || 0
+          ),
+        },
+      ],
+    };
+
+    return data;
+  };
+
   return (
     <>
       <Header />
       {/* Page content */}
       <Container className="mt--7" fluid>
-        <Row>
-          <Col className="mb-5 mb-xl-0" xl="8">
-            <Card className="bg-gradient-default shadow">
-              <CardHeader className="bg-transparent">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h6 className="text-uppercase text-light ls-1 mb-1">
-                      Overview
-                    </h6>
-                    <h2 className="text-white mb-0">Sales value</h2>
-                  </div>
-                  <div className="col">
-                    <Nav className="justify-content-end" pills>
-                      <NavItem>
-                        <NavLink
-                          className={classnames("py-2 px-3", {
-                            active: activeNav === 1,
-                          })}
-                          href="#pablo"
-                          onClick={(e) => toggleNavs(e, 1)}
+        {loading ? (
+          <Col xl="12" className="text-center mt-8">
+            <StylishLoader loaderColor="#2b8a8a" />
+          </Col>
+        ) : (
+          <>
+            <div style={{ width: "18rem" }}>
+                <Card className="card-stats mb-4 mb-lg-0">
+                  <CardBody>
+                    <Row>
+                      <div className="col">
+                        <CardTitle className="text-muted mb-0">
+                          Nombre de compte
+                        </CardTitle>
+                        <span className="h2 font-weight-bold mb-0">{statUser?.total}</span>
+                      </div>
+                      <Col className="col-auto">
+                        <div className="icon icon-shape bg-success text-white rounded-circle shadow">
+                          <i className="fas fa-user" />
+                        </div>
+                      </Col>
+                    </Row>
+                    <p className="mt-3 mb-0 text-muted text-sm">
+                      <p>admin : {statUser.nbadmin}</p>
+                      <p>user : {statUser.nbuser}</p>
+                      <span className="text-nowrap">Depuis la creation</span>
+                    </p>
+                  </CardBody>
+                </Card>
+            </div>
+
+            <Row>
+              <Col className="mb-5 mb-xl-0 mt-5" xl="8">
+                <Card className="bg-gradient-default shadow">
+                  <CardHeader className="bg-transparent">
+                    <Row className="align-items-center">
+                      <div className="col">
+                        <h6 className="text-uppercase text-light ls-1 mb-1">
+                          Overview
+                        </h6>
+                        <h2 className="text-white mb-0">Total commission en {selectedYearCommission}</h2>
+                      </div>
+                      <div className="col-auto">
+                        <select
+                          style={{ width: '120px' }}
+                          className="form-control"
+                          value={selectedYearCommission}
+                          onChange={(e) => setSelectedYearCommission(parseInt(e.target.value))}
                         >
-                          <span className="d-none d-md-block">Month</span>
-                          <span className="d-md-none">M</span>
-                        </NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          className={classnames("py-2 px-3", {
-                            active: activeNav === 2,
-                          })}
-                          data-toggle="tab"
-                          href="#pablo"
-                          onClick={(e) => toggleNavs(e, 2)}
+                          <option value={2022}>2022</option>
+                          <option value={2023}>2023</option>
+                          <option value={2024}>2024</option>
+                        </select>
+                      </div>
+                    </Row>
+                  </CardHeader>
+                  <CardBody>
+                    {/* Chart */}
+                    <div className="chart">
+                      {commissionChart() && <Line data={commissionChart()} options={chartOptions()} />}
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+
+              <Col className="mb-5 mb-xl-0 mt-5" xl="8">
+                <Card className="bg-gradient-default shadow">
+                  <CardHeader className="bg-transparent">
+                    <Row className="align-items-center">
+                      <div className="col">
+                        <h6 className="text-uppercase text-light ls-1 mb-1">
+                          Overview
+                        </h6>
+                        <h2 className="text-white mb-0">Total vente en {selectedYearVente}</h2>
+                      </div>
+                      <div className="col-auto">
+                        <select
+                          style={{ width: '120px' }}
+                          className="form-control"
+                          value={selectedYearVente}
+                          onChange={(e) => setSelectedYearVente(parseInt(e.target.value))}
                         >
-                          <span className="d-none d-md-block">Week</span>
-                          <span className="d-md-none">W</span>
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                  </div>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div className="chart">
-                  <Line
-                    data={chartExample1[chartExample1Data]}
-                    options={chartExample1.options}
-                    getDatasetAtEvent={(e) => console.log(e)}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="bg-transparent">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h6 className="text-uppercase text-muted ls-1 mb-1">
-                      Performance
-                    </h6>
-                    <h2 className="mb-0">Total orders</h2>
-                  </div>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div className="chart">
-                  <Bar
-                    data={chartExample2.data}
-                    options={chartExample2.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row className="mt-5">
-          <Col className="mb-5 mb-xl-0" xl="8">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">Page visits</h3>
-                  </div>
-                  <div className="col text-right">
-                    <Button
-                      color="primary"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      See all
-                    </Button>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Page name</th>
-                    <th scope="col">Visitors</th>
-                    <th scope="col">Unique users</th>
-                    <th scope="col">Bounce rate</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">/argon/</th>
-                    <td>4,569</td>
-                    <td>340</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/index.html</th>
-                    <td>3,985</td>
-                    <td>319</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                      46,53%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/charts.html</th>
-                    <td>3,513</td>
-                    <td>294</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                      36,49%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/tables.html</th>
-                    <td>2,050</td>
-                    <td>147</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" /> 50,87%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/profile.html</th>
-                    <td>1,795</td>
-                    <td>190</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-danger mr-3" />{" "}
-                      46,53%
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">Social traffic</h3>
-                  </div>
-                  <div className="col text-right">
-                    <Button
-                      color="primary"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      See all
-                    </Button>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Referral</th>
-                    <th scope="col">Visitors</th>
-                    <th scope="col" />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">Facebook</th>
-                    <td>1,480</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">60%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="60"
-                            barClassName="bg-gradient-danger"
-                          />
-                        </div>
+                          <option value={2022}>2022</option>
+                          <option value={2023}>2023</option>
+                          <option value={2024}>2024</option>
+                        </select>
                       </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Facebook</th>
-                    <td>5,480</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">70%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="70"
-                            barClassName="bg-gradient-success"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Google</th>
-                    <td>4,807</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">80%</span>
-                        <div>
-                          <Progress max="100" value="80" />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Instagram</th>
-                    <td>3,678</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">75%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="75"
-                            barClassName="bg-gradient-info"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">twitter</th>
-                    <td>2,645</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">30%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="30"
-                            barClassName="bg-gradient-warning"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
+                    </Row>
+                  </CardHeader>
+                  <CardBody>
+                    {/* Chart */}
+                    <div className="chart">
+                      {venteChart() && <Bar data={venteChart()} options={venteChartOptions()} />}
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+
+            </Row>
+            </>
+          )}
       </Container>
     </>
   );

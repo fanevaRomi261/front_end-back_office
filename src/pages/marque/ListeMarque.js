@@ -42,8 +42,8 @@ toggleModal = state => {
 
 getData = async () =>{
   try {
-    const paysObj = await api.get('/admin/pays');
-    const marque = await api.get('/admin/marque');
+    const paysObj = await api.get('/pays');
+    const marque = await api.get('/marque');
     this.setState({ marques: marque.data.data }, () => {
       console.log("State after setting:", marque);
     });
@@ -62,7 +62,7 @@ getData = async () =>{
 delete = async (id) => {
   try {
     this.setState({ loading: true });
-    await api.delete(`/admin/marque/${id}`);
+    await api.delete(`/marque/${id}`);
     this.getData();
   } catch (error) {
     console.error('erreur',error);
@@ -79,7 +79,7 @@ handleSubmit = async (e) => {
   };
   try {
     this.setState({ submitting: true });
-    const response = await api.post('/admin/marque', {
+    const response = await api.post('/marque', {
       libelle,
       pays,
       etat:1

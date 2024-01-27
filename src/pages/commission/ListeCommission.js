@@ -122,7 +122,7 @@ class ListeCommission extends React.Component {
                                 <label className="form-control-label" htmlFor="min"> Prix </label>
                                 <Input className="mb-2" placeholder="min value" type="text" name="min" id="min" value={min} onChange={this.handleChange} />
                                 <Input placeholder="max value" type="text" name="max" id="max" value={max} onChange={this.handleChange} />
-                                <label className="form-control-label" htmlFor="valeur"> Valeur </label>
+                                <label className="form-control-label" htmlFor="valeur"> Valeur  %</label>
                                 <Input placeholder="valeur" type="number" name="valeur" id="valeur" value={valeur} onChange={this.handleChange} />
                             </FormGroup>
 
@@ -161,7 +161,7 @@ class ListeCommission extends React.Component {
                                         <tr className="text-center">
                                             <th scope="col">Min </th>
                                             <th scope="col">Max </th>
-                                            <th scope="col">Valeur</th>
+                                            <th scope="col">Valeur %</th>
 
                                         </tr>
                                     </thead>

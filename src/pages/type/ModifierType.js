@@ -30,7 +30,7 @@ const ModifierCategorie =()=>{
     useEffect(() =>{
         const getData = async () => {
             try {
-                const response = await api.get(`/admin/type/${id}`);
+                const response = await api.get(`/type/${id}`);
                 setType(response.data.data);
             } catch (error) {
                 console.error('Erreur', error);
@@ -43,7 +43,7 @@ const ModifierCategorie =()=>{
         e.preventDefault();
         console.log(type);
         try {
-            await api.put(`admin/type/${id}`,type);
+            await api.put(`/type/${id}`,type);
             window.location.replace('/admin/listeType');
         } catch (error) {
             setErreur(error.response.data.error);

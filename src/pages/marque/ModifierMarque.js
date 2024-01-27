@@ -31,8 +31,8 @@ const ModifierMarque =()=>{
     useEffect(() =>{
         const getData = async () => {
             try {
-                const responseMarque = await api.get(`/admin/marque/${id}`);
-                const responsePays = await api.get(`/admin/pays`);
+                const responseMarque = await api.get(`/marque/${id}`);
+                const responsePays = await api.get(`/pays`);
                 setMarque(responseMarque.data.data);
                 setPays(responsePays.data.data);
             } catch (error) {
@@ -46,7 +46,7 @@ const ModifierMarque =()=>{
         e.preventDefault();
         console.log(marqueModif);
         try {
-            await api.put(`admin/marque/${id}`,marqueModif);
+            await api.put(`/marque/${id}`,marqueModif);
             window.location.replace('/admin/listeMarque');
         } catch (error) {
             setErreur(error.response.data.error);

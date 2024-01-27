@@ -23,7 +23,7 @@ const ModifierCarburant =  ()=>{
         useEffect(() => {
             const fetchData = async () => {
                 try {
-                    const response = await api.get(`/admin/carburant/${id}`);
+                    const response = await api.get(`/carburant/${id}`);
                     console.log(response);
                     setLibelle(response.data.data.libelle);
                 } catch (error) {
@@ -35,7 +35,7 @@ const ModifierCarburant =  ()=>{
         const handleSubmit = async (e) => {
             e.preventDefault();
             try {
-                await api.put(`admin/carburant/${id}`,{
+                await api.put(`/carburant/${id}`,{
                     libelle
                 });
                 window.location.replace('/admin/listeCarburant')

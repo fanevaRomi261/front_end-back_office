@@ -44,7 +44,7 @@ class ListeCarburant extends Component {
     const { libelle } = this.state;
     try {
       this.setState({ submitting: true });
-      const response = await api.post('/admin/carburant/', {
+      const response = await api.post('/carburant/', {
         libelle,
       });
       console.log('AJOUTER', response);
@@ -64,7 +64,7 @@ class ListeCarburant extends Component {
   }
   fetchData = async () => {
     try {
-      const response = await api.get('/admin/carburant/');
+      const response = await api.get('/carburant/');
       this.setState({ data: response.data.data });
       this.setState({ loading: false });
     } catch (error) {
@@ -84,7 +84,7 @@ class ListeCarburant extends Component {
   handleDelete = async (id) => {
     try {
       this.setState({ loading: true });
-      await api.delete(`/admin/carburant/${id}`);
+      await api.delete(`/carburant/${id}`);
       this.fetchData();
     } catch (error) {
       console.error('erreur',error);

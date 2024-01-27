@@ -40,7 +40,7 @@ const ListePays = () => {
 
     const getPays = async () =>{
         try {
-            const paysObj = await api.get('/admin/pays');
+            const paysObj = await api.get('/pays');
 
             const sortedPays = paysObj.data.data.sort((a, b) => b.id - a.id);
             setListePays(sortedPays);
@@ -60,7 +60,7 @@ const ListePays = () => {
         e.preventDefault();
         try {
             setSubmitting(true);
-            await api.post('/admin/pays', paysToInsert);
+            await api.post('/pays', paysToInsert);
             getPays();
             toggleModal();
         } catch (error) {
@@ -83,7 +83,7 @@ const ListePays = () => {
     const suppr = async (id) => {
         try {
             setLoading(true);
-            await api.delete(`/admin/pays/${id}`);
+            await api.delete(`/pays/${id}`);
             getPays();
         } catch (error) {
             console.error('erreur',error);

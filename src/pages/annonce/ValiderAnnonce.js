@@ -15,7 +15,10 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import StylishLoader from "../tools/StylishLoader";
 
+
+
 const ValiderAnnonce =()=> {
+
 
     const [annonces,setAnnonces] = useState([]);
     const [loading,setLoading] = useState(true);
@@ -82,7 +85,7 @@ const ValiderAnnonce =()=> {
                                     {annonce.photo.map((photo, photoIndex) => (
                                         <div key={photoIndex}>
                                         <CardImg top width="100%" height="200px" 
-                                            src={`data:${photo.type};base64,${photo.data}`}
+                                            src={photo.link}
                                             alt={`Image ${photoIndex + 1}`}
                                         />
                                         </div>
@@ -90,9 +93,10 @@ const ValiderAnnonce =()=> {
                                     </Carousel>
 
                                     <CardBody className="bg-transparent border-0">
-                                        <h4>Marque : {annonce.marque.libelle}</h4>
+                                        <h4>Nom : {annonce.nomVoiture}</h4>
+                                        <p>Marque : {annonce.marque.libelle}</p>
                                         <p>Publie par : {annonce.utilisateur.nom} {annonce.utilisateur.prenom}</p>
-                                        <p>Date : {annonce.date}</p>
+                                        <p>Date : {new Date(annonce.date).toLocaleString()}</p>
                                         <div className="d-flex flex-column justify-content-between align-items-center">
                                             <Link to={`/admin/detailAnnonce/${annonce.id}`} className="btn btn-default mb-2"><i className="ni ni-bullet-list-67"></i> Détails</Link>
                                             <div className="d-flex">

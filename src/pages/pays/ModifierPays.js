@@ -30,7 +30,7 @@ const ModifierPays =()=>{
     useEffect(() =>{
         const getData = async () => {
             try {
-                const responsePays = await api.get(`/admin/pays/${id}`);
+                const responsePays = await api.get(`/pays/${id}`);
                 setPays(responsePays.data.data);
             } catch (error) {
                 console.error('Erreur', error);
@@ -43,7 +43,7 @@ const ModifierPays =()=>{
         e.preventDefault();
         console.log(pays);
         try {
-            await api.put(`admin/pays/${id}`,pays);
+            await api.put(`/pays/${id}`,pays);
             window.location.replace('/admin/listePays');
         } catch (error) {
             setErreur(error.response.data.error);

@@ -40,7 +40,7 @@ const ListeType = () => {
 
     const getType = async () =>{
         try {
-            const typeObj = await api.get('/admin/type');
+            const typeObj = await api.get('/type');
 
             const sortedType = typeObj.data.data.sort((a, b) => b.id - a.id);
             setListeType(sortedType);
@@ -60,7 +60,7 @@ const ListeType = () => {
         e.preventDefault();
         try {
             setSubmitting(true);
-            await api.post('/admin/type', typeToInsert);
+            await api.post('/type', typeToInsert);
             getType();
             toggleModal();
         } catch (error) {
@@ -83,7 +83,7 @@ const ListeType = () => {
     const suppr = async (id) => {
         try {
             setLoading(true);
-            await api.delete(`/admin/type/${id}`);
+            await api.delete(`/type/${id}`);
             getType();
         } catch (error) {
             console.error('erreur',error);

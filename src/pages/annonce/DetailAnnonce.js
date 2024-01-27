@@ -47,7 +47,7 @@ const DetailAnnonce = () => {
   
     getData(); // Call the function immediately
 
-  }, [id]);
+  },[id]);
   
 
   return (
@@ -75,16 +75,18 @@ const DetailAnnonce = () => {
                       {annonce.photo.map((photo, photoIndex) => (
                           <div key={photoIndex}>
                           <CardImg top width="100%" height="300px" 
-                              src={`data:${photo.type};base64,${photo.data}`}
+                              src={photo.link}
                               alt={`Image ${photoIndex + 1}`}
                           />
                           </div>
                       ))}
                     </Carousel>
                     
-                    <p className="mt-2">Categorie : {annonce.categorie.libelle}</p>
+                    <p className="mt-2">Nom : {annonce.nomVoiture}</p>
+                    <p>Categorie : {annonce.categorie.libelle}</p>
                     <p>Type : {annonce.type.libelle}</p>
-                    <p>Date : {annonce.date}</p>
+                    <p>Carburant : {annonce.carburant.libelle}</p>
+                    <p>Date : {new Date(annonce.date).toLocaleString()}</p>
                     <p>Publie par : {annonce.utilisateur.nom} {annonce.utilisateur.prenom}</p>
                     <p>Description : {annonce.description}</p>
 

@@ -40,7 +40,7 @@ const ListeCategorie = () => {
 
     const getCategorie = async () =>{
         try {
-            const categorieObj = await api.get('/admin/categorie');
+            const categorieObj = await api.get('/categorie');
 
             const sortedCategorie = categorieObj.data.data.sort((a, b) => b.id - a.id);
             setListeCategorie(sortedCategorie);
@@ -60,7 +60,7 @@ const ListeCategorie = () => {
         e.preventDefault();
         try {
             setSubmitting(true);
-            await api.post('/admin/categorie', categorieToInsert);
+            await api.post('/categorie', categorieToInsert);
             getCategorie();
             toggleModal();
         } catch (error) {
@@ -83,7 +83,7 @@ const ListeCategorie = () => {
     const suppr = async (id) => {
         try {
             setLoading(true);
-            await api.delete(`/admin/categorie/${id}`);
+            await api.delete(`/categorie/${id}`);
             getCategorie();
         } catch (error) {
             console.error('erreur',error);
