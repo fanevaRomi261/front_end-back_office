@@ -44,7 +44,7 @@ class ListeCarburant extends Component {
     const { libelle } = this.state;
     try {
       this.setState({ submitting: true });
-      const response = await api.post('/carburant/', {
+      const response = await api.post('/carburant', {
         libelle,
       });
       console.log('AJOUTER', response);
@@ -64,7 +64,7 @@ class ListeCarburant extends Component {
   }
   fetchData = async () => {
     try {
-      const response = await api.get('/carburant/');
+      const response = await api.get('/carburant');
       this.setState({ data: response.data.data });
       this.setState({ loading: false });
     } catch (error) {
@@ -151,14 +151,14 @@ class ListeCarburant extends Component {
 
           <Row className="mt-3">
             <div className="col-md-6">
-              <Card className=" shadow">
+              <Card className="bg-default shadow">
                 <CardHeader className="bg-transparent border-0">
-                  <h3 className="mb-0">Type de carburant</h3>
+                  <h3 className="text-white mb-0">Type de carburant</h3>
                 </CardHeader>
                 <Table
-                  className="align-items-center  table-flush"
+                  className="align-items-center table-dark  table-flush"
                 >
-                  <thead className="thead-light">
+                  <thead className="thead-dark">
                     <tr>
                       <th scope="col">Libelle</th>
                       <th scope="col">Action</th>

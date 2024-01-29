@@ -35,6 +35,12 @@ import {
 } from "reactstrap";
 
 const AdminNavbar = (props) => {
+
+  const handleLogout = () =>{
+    localStorage.removeItem('authToken');
+    window.location.replace('/');
+  }
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -64,7 +70,7 @@ const AdminNavbar = (props) => {
                   <span className="avatar avatar-sm rounded-circle">
                     <img
                       alt="..."
-                      src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                      src={require("../../assets/img/theme/admin.jpg")}
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
@@ -80,9 +86,9 @@ const AdminNavbar = (props) => {
                 </DropdownItem>
                 
                 <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem href="#pablo" onClick={handleLogout}>
                   <i className="ni ni-user-run" />
-                  <span>Logout</span>
+                  <span>log out</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

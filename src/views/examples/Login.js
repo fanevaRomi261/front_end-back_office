@@ -17,8 +17,8 @@ import {
 import StylishLoader from 'pages/tools/StylishLoader';
 
 const Login = () => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState("admin@gmail.com");
+  const [password, setPassword] = useState("1234");
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false);
 

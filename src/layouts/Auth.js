@@ -62,9 +62,9 @@ const Auth = (props) => {
             <div className="header-body text-center mb-5">
               <Row className="justify-content-center">
                 <Col lg="5" md="6">
-                  <h1 className="text-white">Welcome!</h1>
+                  <h1 className="text-white">Espace admin</h1>
                   <p className="text-lead text-light">
-                  Explorez les fonctionnalités avancées et gérez efficacement votre espace d'administration.
+                    Gérez efficacement votre espace d'administration.
                   </p>
                 </Col>
               </Row>

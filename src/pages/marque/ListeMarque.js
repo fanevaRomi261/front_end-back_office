@@ -44,7 +44,9 @@ getData = async () =>{
   try {
     const paysObj = await api.get('/pays');
     const marque = await api.get('/marque');
-    this.setState({ marques: marque.data.data }, () => {
+
+    const sortedMarque = marque.data.data.sort((a, b) => b.id - a.id);
+    this.setState({ marques: sortedMarque }, () => {
       console.log("State after setting:", marque);
     });
     this.setState({ pays: paysObj.data.data }, () => {

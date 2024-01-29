@@ -39,7 +39,7 @@ class ListeCommission extends React.Component {
 
     fetchData = async () => {
         try {
-            const response = await api.get('/admin/commission/');
+            const response = await api.get('/admin/commission');
             this.setState({ data: response.data.data });
             console.log(response);
             this.setState({ loading: false });
@@ -55,7 +55,7 @@ class ListeCommission extends React.Component {
         const { min, max, valeur } = this.state;
         try {
             this.setState({ submitting: true });
-            const response = await api.post('/admin/commission/', {
+            const response = await api.post('/admin/commission', {
                 min, max, valeur
             });
             console.log('AJOUTER', response);

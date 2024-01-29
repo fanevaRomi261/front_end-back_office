@@ -112,11 +112,12 @@ const Sidebar = (props) => {
         </button>
         {/* Brand */}
         {logo ? (
-          <NavbarBrand className="pt-0" {...navbarBrandProps}>
+          <NavbarBrand {...navbarBrandProps}>
             <img
               alt={logo.imgAlt}
               className="navbar-brand-img"
-              src={logo.imgSrc}
+              src={require("../../assets/img/brand/milavam.png")}
+              style={{ width: '150px', height: '250px' }}
             />
           </NavbarBrand>
         ) : null}
@@ -143,7 +144,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="..."
-                    src={require("../../assets/img/theme/team-1-800x800.jpg")}
+                    src={require("../../assets/img/theme/admin.jpg")}
                   />
                 </span>
               </Media>
